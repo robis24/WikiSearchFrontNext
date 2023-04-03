@@ -1,0 +1,44 @@
+{
+	"name": "WikiSearchSsr",
+	"author": [],
+	"url": "https://www.mediawiki.org/wiki/Extension:WikiSearchSsr",
+	"descriptionmsg": "wikisearchssr-desc",
+	"license-name": "GPL-2.0-or-later",
+	"type": "parserhook",
+	"MessagesDirs": {
+		"WikiSearchSsr": [
+			"i18n"
+		]
+	},
+	"ResourceModules": {
+		"ext.WikiSearchSsr.module": {
+			"dependencies": [
+			  "ext.WikiSearchSsr.dependecies"
+			],
+			"scripts": [
+			  "../dist/wikisearchssr.umd.min.js",
+			  "init.js"
+			],
+			"messages": [],
+			"styles": [
+				"../dist/wikisearchssr.css"
+			]
+		},
+		"ext.WikiSearchSsr.dependecies": {
+			"scripts": [
+			  "vue.min.js"
+			]
+		  }
+	},
+	"ResourceFileModulePaths": {
+		"localBasePath": "resources",
+		"remoteExtPath": "WikiSearchSsr/resources"
+	},
+	"AutoloadClasses": {
+		"WikiSearchSsrHooks": "includes/WikiSearchSsrHooks.php"
+	},
+	"Hooks": {
+		"ParserFirstCallInit": "WikiSearchSsrHooks::onParserFirstCallInit"
+	},
+	"manifest_version": 1
+}

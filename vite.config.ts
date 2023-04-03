@@ -3,7 +3,10 @@ import ssr from 'vite-plugin-ssr/plugin'
 import { UserConfig } from 'vite'
 
 const config: UserConfig = {
-  plugins: [vue(), ssr()]
+  base: 'http://localhost:3000/',
+  plugins: [vue(), ssr({
+   // baseAssets: 'http://localhost:3000/'
+  })]
 }
 
 export default config
