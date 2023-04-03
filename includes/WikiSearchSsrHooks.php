@@ -17,7 +17,7 @@ class WikiSearchSsrHooks {
 		$raw_data = file_get_contents('http://localhost:3000');
 
 		
-		$output = $raw_data;
+		$output = "<div>" . $raw_data . "</div>";
   
 		return  $output;
 	 }
