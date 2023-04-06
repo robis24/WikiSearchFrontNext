@@ -13,15 +13,15 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { CdxCombobox, MenuItemData } from '@wikimedia/codex';
-import { useCounter } from './../../../stores/store'
-const counterStore = useCounter()
+import { useStore } from './../../../stores/store'
+const store = useStore()
 
 const props = defineProps({
-    filterName: String,
+    filterName: { type: String, required: true },
   })
 
 
-const menuItems: MenuItemData[] = counterStore.aggregations[props.filterName] || []
+const menuItems: MenuItemData[] = [store.aggregations[props.filterName]] || []
 
 const selection = ref('');
     

@@ -7,6 +7,11 @@ const config: UserConfig = {
   server: {
     origin: 'http://localhost:3000',
   },
+  ssr: {
+    noExternal: [
+      'vue-banana-i18n',
+    ],
+  },
   plugins: [vue(), ssr({
    // baseAssets: 'http://localhost:3000/'
   })]

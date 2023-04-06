@@ -2,7 +2,6 @@
     <div
       :class="
         `wikisearch-filter
-         wikisearch-combobox
          wikisearch-filter--${stripedName}`
       "
     >
@@ -16,16 +15,16 @@
   </template>
   
   <script setup lang="ts">
-import { useCounter } from './../../stores/store'
+import { useStore } from './../../stores/store'
 
-const counterStore = useCounter()
+const store = useStore()
     
   const props = defineProps({
-    filterName: String,
+    filterName: { type: String, required: true },
   })
   
 
-  const config = counterStore.config.facetSettings[props.filterName];
+  const config = store.config.facetSettings[props.filterName];
   
   // import { strip } from '../../utilities/stringUtils';
   

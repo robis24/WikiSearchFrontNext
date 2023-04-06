@@ -4,39 +4,45 @@
     aria-disabled="false"
     role="search"
   >
-  <cdx-search-input
+    <cdx-search-input
 			v-model="inputValue"
 			button-label="Search"
 			aria-label="SearchInput with Button demo"
+      :clearable="true"
 		/>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { computed } from 'vue';
 import { CdxSearchInput } from '@wikimedia/codex';
+import { useStore } from './../../stores/store'
+const store = useStore()
 
-const inputValue = ref<string|number>( '' );
+const inputValue = computed<string>({
+  get () {    
+    return store.term
+  },
+  set (value) {
+    store.search(value)
+  }
+})
+
 
 </script>
 
 <style>
-.wikisearch-search {
-  grid-area: search;
-  display: flex;
-  vertical-align: middle;
-  box-sizing: border-box;
-  width: 100%;
+
+
+.wikisearch-search .cdx-search-input {
+    width: 100%;
 }
 
-.wikisearch-search .wikisearch-button--icon {
-  border-radius: 2px;
-  margin-left:1em ;
+.wikisearch-filter .cdx-text-input__input {
+  min-width: 0px;
 }
-.wikisearch-search__wrapper {
-  position: relative;
-  width: 100%;
-}
+
+
 
 .wikisearch-syntax {
     width: calc(100% - 4.2em + 1px);

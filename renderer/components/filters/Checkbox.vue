@@ -14,26 +14,26 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import { CdxCheckbox } from '@wikimedia/codex';
-import { useCounter } from './../../../stores/store'
-const counterStore = useCounter()
+import { useStore } from './../../../stores/store'
+const store = useStore()
 
 const emit = defineEmits(['updateSelected']);
 
 const props = defineProps({
-  filterName: String
+  filterName: { type: String, required: true },
 })
 
-const checkboxes = computed(() => props.filterName ? counterStore.aggregations[props.filterName] || [] : [])
+const checkboxes = computed(() => props.filterName ? store.aggregations[props.filterName] || [] : [])
 
 const checkboxValue = computed({
   get () {    
-    return counterStore.selected
+    return store.selected
       .filter(filter => filter.key === props.filterName)
       .map(filter => filter.value)
        || []
   },
   set (value) {
-    return emit('updateSelected', [...counterStore.selected
+    return emit('updateSelected', [...store.selected
       .filter(filter => filter.key !== props.filterName),
       ...value.map(val => ({
         key: props.filterName,

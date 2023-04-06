@@ -9,10 +9,16 @@ async function render(pageContext: PageContextClient) {
   if (!Page) throw new Error('Client-side render() hook expects pageContext.Page to be defined')
   const instance = createApp(Page, pageProps, pageContext)
 
-  const app = instance.app
-  instance.store.state.value = pageContext.initialStoreState
+  // document.getElementById("page")?.innerHTML === ""
 
-  app.mount('#app')
+  
+    const app = instance.app
+    instance.store.state.value = pageContext.initialStoreState
+
+    app.mount('#app')
+  
+
+
 }
 
 /* To enable Client-side Routing:

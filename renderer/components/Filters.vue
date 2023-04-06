@@ -1,5 +1,5 @@
 <template>
-    <div class="wikisearch-filters__wrapper">
+    <div class="wikisearch-filters">
         <Filter 
             v-for="filterObject in filters" 
             :key="'filter-' + filterObject.key" 
@@ -16,22 +16,22 @@
 </template>
   
 <script setup lang="ts">
-import { useCounter } from './../../stores/store'
+import { useStore, filterOption } from './../../stores/store'
 import { CdxSearchInput } from '@wikimedia/codex';
 import Filter from './Filter.vue';
-import FacetCombobox from './filters/FacetCombobox.vue';
+import Combobox from './filters/Combobox.vue';
 import Checkbox from './filters/Checkbox.vue';
 
 
-const counterStore = useCounter()
+const store = useStore()
 
 const components = {
-    combobox: FacetCombobox,
+    combobox: Combobox,
     search: CdxSearchInput,
     default: Checkbox,
 };
 
-const filters = Object.entries(counterStore.config.facetSettings)
+const filters = Object.entries(store.config.facetSettings)
     .map(([key, value]) => {
         
          return {
@@ -41,12 +41,8 @@ const filters = Object.entries(counterStore.config.facetSettings)
         }
     });
 
-const updateSelected = (e) => {
-    
-
-    counterStore.select(e)
-
-
+const updateSelected = (e: filterOption[] ) => {
+    store.select(e)
 }
 
 </script>
