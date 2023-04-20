@@ -1,24 +1,23 @@
 <?php
-class WikiSearchSsrHooks {
-	public static function onParserFirstCallInit( Parser $parser ) {
+class WikiSearchSsrHooks
+{
+	public static function onParserFirstCallInit(Parser $parser) {
+		$parser->setHook('wikisearchssr', [self::class, 'wikiSearchSsr']);
+	}
 
-		$parser->setHook( 'wikisearchssr', [ self::class, 'wikiSearchSsr' ] );
-	 }
-  
-	 public static function wikiSearchSsr( $input, $args, Parser $parser, $frame ) {
-  
-		// $parser->getOutput()->addJsConfigVars( "WikiSearchSsr",
-		// 									   array(
-		// 										   "config" => json_decode($input, true)
-		// 									   ) );
-		// add vue modules
-		// $parser->getOutput()->addModules( 'ext.WikiSearchSsr.module' );
+	public static function wikiSearchSsr($input, $args, Parser $parser, $frame)	{
 
-		$raw_data = file_get_contents('http://localhost:3000');
+		if (false) {
+			$raw_data = file_get_contents('http://localhost:3000');
+			$output = "<div>" . $raw_data . "</div>";
+			return  $output;
+		} 
 
-		
-		$output = "<div>" . $raw_data . "</div>";
-  
+		$parser->getOutput()->addModules( ['ext.WikiSearchSsr.module'] );
+
+
+		$output = "<div id='app'></div>";
+
 		return  $output;
-	 }
+	}
 }

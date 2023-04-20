@@ -1,8 +1,10 @@
 {
   "scripts": {
-    "dev": "npm run server",
+    "devssr": "npm run server",
+    "dev": "vite serve -c vite.config.ssr.ts",
     "prod": "npm run build && npm run server:prod",
     "build": "vite build",
+    "lib": "vite build -c vite.config.ssr.ts",
     "server": "ts-node ./server/index.ts",
     "server:prod": "cross-env NODE_ENV=production ts-node ./server/index.ts"
   },

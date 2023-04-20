@@ -48,9 +48,9 @@ const mw = {
               },
               info: true,
               title: {
-                name: 'Title',
-                key: 633,
-                type: 'mlt_recField',
+                name: 'Class',
+                key: 631,
+                type: 'txtField',
                 highlight: true,
               },
               // selected: 'Favo:Admin;Tag:ICT',
@@ -92,7 +92,7 @@ const mw = {
                 valueLabel: 'my favos'
               },
               Version: {
-                display: 'elastic combobox',
+                display: 'combobox',
                 count: 'false'
               },
               'Modification date': {
@@ -107,6 +107,7 @@ const mw = {
                 true: 'ICT',
                 false: 'Test',
                 default: 'false',
+                logic: 'or'
               },
             },
             hitSettings: {

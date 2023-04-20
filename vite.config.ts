@@ -12,6 +12,11 @@ const config: UserConfig = {
       'vue-banana-i18n',
     ],
   },
+  build: {
+  // rollupOptions: {
+  //   output: { entryFileNames: '[name].js' },
+  // }
+},
   plugins: [vue(), ssr({
    // baseAssets: 'http://localhost:3000/'
   })]

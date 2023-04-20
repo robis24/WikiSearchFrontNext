@@ -4,20 +4,35 @@
     aria-disabled="false"
     role="search"
   >
+    <cdx-button
+      v-if="isOpen"
+      aria-label="open filters"
+      @click="toggleFilters"
+    >
+      <cdx-icon :icon="cdxIconMenu" />
+    </cdx-button>
+
     <cdx-search-input
 			v-model="inputValue"
 			button-label="Search"
 			aria-label="SearchInput with Button demo"
       :clearable="true"
 		/>
+
+    <Sort />
+
   </div>
 </template>
 
 <script setup lang="ts">
 import { computed } from 'vue';
-import { CdxSearchInput } from '@wikimedia/codex';
-import { useStore } from './../../stores/store'
+import { CdxSearchInput, CdxButton, CdxIcon } from '@wikimedia/codex';
+import { cdxIconMenu } from '@wikimedia/codex-icons';
+import { useStore } from './../../stores/store';
+import Sort from './Sort.vue';
 const store = useStore()
+
+const isOpen = computed(() => !store.filtersOpen)
 
 const inputValue = computed<string>({
   get () {    
@@ -28,10 +43,17 @@ const inputValue = computed<string>({
   }
 })
 
+const toggleFilters = () => {
+    store.toggleFilters()
+}
 
 </script>
 
 <style>
+
+.wikisearch-search {
+    display: flex;
+}
 
 
 .wikisearch-search .cdx-search-input {

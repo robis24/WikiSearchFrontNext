@@ -12,17 +12,15 @@
 	},
 	"ResourceModules": {
 		"ext.WikiSearchSsr.module": {
-			"dependencies": [
-			  "ext.WikiSearchSsr.dependecies"
+			"es6": true,
+            "packageFiles": [
+			  "wikisearch.umd.cjs"
+
 			],
-			"scripts": [
-			  "../dist/wikisearchssr.umd.min.js",
-			  "init.js"
-			],
-			"messages": [],
 			"styles": [
-				"../dist/wikisearchssr.css"
+				"style.css"
 			]
+			
 		},
 		"ext.WikiSearchSsr.dependecies": {
 			"scripts": [

@@ -1,11 +1,9 @@
-import { createSSRApp, defineComponent, h } from 'vue'
+import { createApp, defineComponent, h } from 'vue'
 import { createPinia } from 'pinia'
 import { createI18n } from 'vue-banana-i18n';
 import PageShell from './PageShell.vue'
-import { setPageContext } from './usePageContext'
 import type { Component, PageContext, PageProps } from './types'
 
-export { createVueApp }
 
 const messages = {
   en: {
@@ -38,22 +36,8 @@ const messages = {
   },
 };
 
-function createVueApp(Page: Component, pageProps: PageProps | undefined, pageContext: PageContext) {
-  const PageWithLayout = defineComponent({
-    render() {
-      return h(
-        PageShell,
-        {},
-        {
-          default() {
-            return h(Page, pageProps || {})
-          }
-        }
-      )
-    }
-  })
 
-  const app = createSSRApp(PageWithLayout)
+  const app = createApp(PageShell)
 
   const store = createPinia()
 
@@ -66,11 +50,12 @@ function createVueApp(Page: Component, pageProps: PageProps | undefined, pageCon
 
   app.use(store)
   // Make pageContext available from any Vue component
-  setPageContext(app, pageContext)
 
-  return { app, store }
+  app.mount('#app')
 
-}
+
+
+
 
 
 // add switch for spa no ssr , see: https://github.com/AaronBeaudoin/vite-plugin-ssr-example/blob/main/pages/_default/app.ts

@@ -1,33 +1,78 @@
 <template>
-  <div class="wikisearch">
+  <div 
+    class="wikisearch"
+    :class="{
+      'wikisearch--filters-closed': !isOpen
+    }"
+  >
     <Search />
     <Selected />
-    <Filters />
+    <Filters v-show="isOpen"/>
     <Total />
     <Action />
-    <Sort />
-    <Result />
+    <Results />
+    <Pager />
   </div>
 </template>
 
 <script setup lang="ts">
-import { onServerPrefetch, onMounted } from 'vue'
+import { onServerPrefetch, onMounted, computed } from 'vue'
 import { useStore } from './../../stores/store'
 import Search from './Search.vue';
 import Selected from './Selected.vue';
 import Filters from './Filters.vue';
 import Total from './Total.vue';
 import Action from './Action.vue';
-import Sort from './Sort.vue';
-import Result from './Result.vue';
+import Results from './Results.vue';
+import Pager from './Pager.vue';
 
 const store = useStore()
 
+const isOpen = computed(() => store.filtersOpen)
+
 const loadTodos = async () => {
+  store.getStateFromUrlParams();
   await store.fetchResult();
+
+  store.$subscribe((mutation, state) => {
+
+    if (mutation.events.key !== 'selected') {
+      return
+    }
+
+    const url = new URL(window.location.href);
+    const { searchParams } = url;
+
+    const paramOptions = {
+      filters: () => state.selected.map((option: filterOption) => {
+
+        const aggregations = state.aggregations?.[option.key]?.[option.value] || {};
+
+        const types = {
+          range: [`range_${option.key}_${option.value}`, `${aggregations.from || option.from }_${aggregations.to || option.to}`],
+          query: [`query_${option.key}`, option.value],
+          default: [option.key, option.value]
+        }
+
+        return (types[aggregations.type || option.type] || types.default).join('^^')
+      }).join('~~'),
+      term: () => state.term,
+      offset: () => state.from > 0,
+      sort: () => state.sort && state.sort !== 'score',
+      order: () => state.order && state.order !== 'desc'
+    }
+
+    Object.entries(paramOptions).forEach(([key, value]) => {
+      value() ? searchParams.set(key, value()) : searchParams.delete(key);
+    })
+
+    window.history.replaceState('', '', url)
+
+    store.fetchResult()
+  })
 }
 onServerPrefetch(loadTodos)
-// onMounted(loadTodos)
+onMounted(loadTodos)
 
 </script>
 
@@ -60,9 +105,10 @@ onServerPrefetch(loadTodos)
   grid-template-rows:
     auto minmax(2em, auto) 1fr;
   grid-template-areas:
-    "search search search sort"
+    "search search search search"
     "selected selected action total"
-    "filters results results results";
+    "filters results results results"
+    "filters pager pager pager";
   grid-gap: 0.5em 2em;
   /* styles */
   padding: 1em;
@@ -71,16 +117,21 @@ onServerPrefetch(loadTodos)
   font-family: sans-serif;
 }
 
+.wikisearch.wikisearch--filters-closed {  
+  grid-template-columns: 1fr auto auto;
+  grid-template-areas:
+    "search search search"
+    "selected action total"
+    "results results results"
+    "pager pager pager";
+}
+
 .wikisearch-search {
   grid-area: search;
 }
 
 .wikisearch-selected {
   grid-area: selected;
-}
-
-.wikisearch-sort {
-  grid-area: sort;
 }
 
 .wikisearch-filters {
@@ -97,6 +148,10 @@ onServerPrefetch(loadTodos)
 
 .wikisearch-results {
   grid-area: results;
+}
+
+.wikisearch-pager {
+  grid-area: pager;
 }
 
 .wikisearch--theme-dark {

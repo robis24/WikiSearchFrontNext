@@ -28,13 +28,14 @@ const checkboxes = computed(() => props.filterName ? store.aggregations[props.fi
 const checkboxValue = computed({
   get () {    
     return store.selected
-      .filter(filter => filter.key === props.filterName)
+      .filter(filter => filter.key === props.filterName && filter.value !== 'customrange')
       .map(filter => filter.value)
        || []
   },
   set (value) {
+    console.log(value)
     return emit('updateSelected', [...store.selected
-      .filter(filter => filter.key !== props.filterName),
+      .filter(filter => filter.key !== props.filterName || filter.value === 'customrange'),
       ...value.map(val => ({
         key: props.filterName,
         value: val

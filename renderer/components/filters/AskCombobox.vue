@@ -21,6 +21,9 @@
 import { computed, ref } from 'vue';
 import { CdxLookup, MenuItemData } from '@wikimedia/codex';
 import { useStore } from './../../../stores/store'
+
+import mw from './../../../stores/mock.js'
+
 const store = useStore()
 
 const props = defineProps({
@@ -29,8 +32,10 @@ const props = defineProps({
 
   const emit = defineEmits(['updateSelected']);
 
-const menuItems = ref<MenuItemData[]>( store.aggregations[props.filterName] ? Object.values(store.aggregations[props.filterName]) : [] );
+const menuItems = ref<MenuItemData[]>( [] );
 const expanded = ref(true)
+const { query, data, text } = store.config.facetSettings[props.filterName]
+
 
 const selection = computed({
   get() {
@@ -54,8 +59,36 @@ const selection = computed({
   }
 })
 
-const onInput = (value: string) => {
-	menuItems.value = store.aggregations[props.filterName] ? Object.values(store.aggregations[props.filterName]).filter((item) => item.label?.includes(value)) : []
+const transformResults = (results) =>  Object.values(results).map((result) => {
+    const value = result.printouts?.[data]?.[0]?.fulltext || result.printouts?.[data]?.[0]
+    const label = result.printouts?.[text]?.[0]?.fulltext || result.printouts?.[text]?.[0]
+
+    return {
+        doc_count: 1,
+        label: label || value,
+        value: value || label,
+    }
+})
+
+const onInput = async (value: string) => {
+      
+      const output = text  ? `|?${data}|?${text}` : `|?${text}`;
+      const input = text || data;
+      const askQuery = `${query}[[${input}::in:${value}]]${output}`;
+
+      const params = {
+        action: 'ask',
+        query: askQuery,
+        format: 'json',
+        formatversion: 2,
+      };
+    
+    var api = new mw.Api();
+    const result = await api.post(params)
+
+    
+
+	menuItems.value = transformResults(result.query.results);
 }
     
 </script>

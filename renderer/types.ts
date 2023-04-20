@@ -24,6 +24,7 @@ export type PageContextCustom = {
   Page: Page
   pageProps?: PageProps
   urlPathname: string
+  initialStoreState?: any
   exports: {
     documentProps?: {
       title?: string

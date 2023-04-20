@@ -1,16 +1,12 @@
 <template>
-	<div class="wikisearch-results">
-		<div
-		v-for="result in results"
-		:key="'result-' + result._id"
-		>
+	<div class="wikisearch-result">
 		<cdx-card 
-			:url="result._source.subject.title"
+			:url="resultData._source.subject.title"
 			:force-thumbnail="true"
 			:thumbnail="thumbnailData"
 		>
 			<template #title>
-				{{ result._source.subject.title }}
+				{{ titleValue || resultData._source.subject.title }}
 			</template>
 			<template #description>
 				Description text will commonly be longer than a single line, and
@@ -23,7 +19,6 @@
 				will wrap onto a new line like the rest of the Card content.
 			</template>
 		</cdx-card>
-		</div>
 	</div>
 </template>
 
@@ -31,25 +26,33 @@
 import { computed } from 'vue';
 import { CdxCard, CdxIcon } from '@wikimedia/codex';
 import { cdxIconWatchlist } from '@wikimedia/codex-icons';
-import { useStore } from './../../stores/store'
+import { Result } from './../../stores/types'
+import { useStore } from '../../stores/store'
+
 const store = useStore()
 
+const props = defineProps<{
+    resultData: Result
+}>()
+  
 
 const thumbnailData = {
 	url: '//upload.wikimedia.org/wikipedia/commons/thumb/e/e1/FullMoon2010.jpg/200px-FullMoon2010.jpg'
 };
 
-// const { title } = store.config.settings
-// const hit = store.config.
+const { title } = store.config.settings
 
-const results = computed(() => store.hits)
+const { hitSettings } = store.config
+
+//Object.entries(hitSettings).map()
+
+const titleProperty = props.resultData._source?.[`P:${title.key}`]?.[title.type]
+const titleValue = computed(() => titleProperty ? titleProperty.join(',') : "");
+// const hit = store.config.
+console.log(titleProperty, titleValue)
+
+// const results = computed(() => store.hits)
 
 
 </script>
 
-<style>
-.wikisearch-results {
-    display: grid;
-    gap: 1em;
-}
-</style>

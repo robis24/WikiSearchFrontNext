@@ -4,7 +4,7 @@ export const passToClient = ['initialStoreState', 'pageProps', 'urlPathname']
 
 import { renderToString } from '@vue/server-renderer'
 import { escapeInject, dangerouslySkipEscape } from 'vite-plugin-ssr/server'
-import { createApp } from './app'
+import { createVueApp } from './app'
 import logoUrl from './logo.svg'
 import type { PageContextServer } from './types'
 
@@ -12,7 +12,7 @@ async function render(pageContext: PageContextServer) {
   const { Page, pageProps } = pageContext
   // This render() hook only supports SSR, see https://vite-plugin-ssr.com/render-modes for how to modify render() to support SPA
   if (!Page) throw new Error('My render() hook expects pageContext.Page to be defined')
-  const { app, store } = createApp(Page, pageProps, pageContext)
+  const { app, store } = createVueApp(Page, pageProps, pageContext)
 
   const appHtml = await renderToString(app)
 
