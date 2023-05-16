@@ -5,6 +5,8 @@
 > **Warning**
 > In development, not ready for use
 
+see https://github.com/Open-CSP/WikiSearchFront for production ready verison
+
 The **WikiSearchFront** MediaWiki extension is a front-end for [WikiSearch](https://www.mediawiki.org/wiki/Extension:WikiSearch "Extension:WikiSearch") written in Vue.js
 
 ## Installation
